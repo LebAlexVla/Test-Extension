@@ -24,11 +24,14 @@ export function activate(context: vscode.ExtensionContext) {
                 const line = editor.document.lineAt(select.end.line);
 				// Create line under previous
                 const position = new vscode.Position(line.range.end.line + 1, 0);
+                // Get all whitespaces and tabs
+                const indent = line.text.split(/\S/)[0];
 				// Create a new line to insert
-                const new_line = `std::cout << ${variable} << std::endl;`;
+                const new_line = `${indent}std::cout << ${variable} << std::endl;`;
 				// Insert the line
                 editor.edit(editBuilder => {
                     editBuilder.insert(position, new_line);
+                    editBuilder.insert(position, '\n');
                 });
             }
 			// If nothing is selected
