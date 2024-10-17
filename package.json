@@ -1,24 +1,42 @@
 {
   "name": "printvariable",
   "displayName": "PrintVariable",
+  
+  "author": {
+    "name": "Alexander Lebedev",
+    "url": "https://github.com/LebAlexVla",
+    "email": "lebalexvla@gmail.com"
+  },
+  
   "description": "An extension for VS code that prints the selected variable",
   "version": "0.0.1",
+  
   "engines": {
     "vscode": "^1.94.0"
   },
+
   "categories": [
     "Other"
   ],
+
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "printvariable.helloWorld",
-        "title": "Hello World"
+        "command": "extension.PrintVariable",
+        "title": "Print Variable"
       }
+    ],
+    "keybindings": [
+        {
+            "command": "extension.PrintVariable",
+            "key": "ctrl+alt+p",
+            "when": "editorTextFocus"
+        }
     ]
   },
+
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
@@ -27,6 +45,7 @@
     "lint": "eslint src",
     "test": "vscode-test"
   },
+
   "devDependencies": {
     "@types/vscode": "^1.94.0",
     "@types/mocha": "^10.0.8",
