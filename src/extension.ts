@@ -1,26 +1,51 @@
 // The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+// Extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
+	// Will only be executed once when extension is activated
 	console.log('Congratulations, your extension "printvariable" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('printvariable.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from PrintVariable!');
-	});
+	// Register the command from package.json file
+	let disposable = vscode.commands.registerCommand('extension.PrintVariable', () => {
+        const editor = vscode.window.activeTextEditor;
 
-	context.subscriptions.push(disposable);
+		// Check if there is an active text editor
+        if (editor) {
+			// Get selected
+            const select = editor.selection;
+			// Clean from whitespaces and etc
+            const variable = editor.document.getText(select).trim();
+
+			// If selected is something
+            if (variable) {
+				// Get line of selection end
+                const line = editor.document.lineAt(select.end.line);
+				// Create line under previous
+                const position = new vscode.Position(line.range.end.line + 1, 0);
+				// Create a new line to insert
+                const new_line = `std::cout << ${variable} << std::endl;`;
+				// Insert the line
+                editor.edit(editBuilder => {
+                    editBuilder.insert(position, new_line);
+                });
+            }
+			// If nothing is selected
+			else
+                vscode.window.showWarningMessage('You should select a variable');
+        }
+    });
+
+	// for delete after deactivation of the extension
+    context.subscriptions.push(disposable);
+
+    // Register a keybinding command
+    let disposableKeybinding = vscode.commands.registerCommand('extension.PrintVariable', () => {});
+
+	// Add the keybinding command to the context subscriptions
+    context.subscriptions.push(disposableKeybinding);
 }
 
-// This method is called when your extension is deactivated
+// Extension is deactivated
 export function deactivate() {}
